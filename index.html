@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>సాధారణ వడ్డీ గణక యంత్రం</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #f6d365, #fda085);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #444;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #555;
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    input:focus {
+      border-color: #fda085;
+      outline: none;
+      box-shadow: 0 0 8px rgba(253, 160, 133, 0.5);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background: linear-gradient(120deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(120deg, #f5576c, #f093fb);
+      transform: translateY(-2px);
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    .result p {
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>సాధారణ వడ్డీ గణక యంత్రం</h2>
+    <form id="interestForm">
+      <label for="principal">మూలధనం:</label>
+      <input type="number" id="principal" placeholder="మూలధనం నమోదు చేయండి" required>
+
+      <label for="rate">వడ్డీ రేటు (% ప్రతి నెలకు):</label>
+      <input type="number" id="rate" placeholder="ప్రతి నెల వడ్డీ రేటు నమోదు చేయండి" required>
+
+      <label for="startDate">ప్రారంభ తేది:</label>
+      <input type="date" id="startDate" required>
+
+      <label for="endDate">ముగింపు తేది:</label>
+      <input type="date" id="endDate" required>
+
+      <button type="button" onclick="calculateInterest()">లెక్కించు</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateInterest() {
+      const principal = parseFloat(document.getElementById('principal').value);
+      const rate = parseFloat(document.getElementById('rate').value); // Rate per month
+      const startDate = new Date(document.getElementById('startDate').value);
+      const endDate = new Date(document.getElementById('endDate').value);
+
+      if (isNaN(principal) || isNaN(rate) || !startDate || !endDate) {
+        document.getElementById('result').innerText = 'దయచేసి సరైన విలువలను నమోదు చేయండి.';
+        return;
+      }
+
+      if (endDate <= startDate) {
+        document.getElementById('result').innerText = 'ముగింపు తేది ప్రారంభ తేది కంటే తరువాత ఉండాలి.';
+        return;
+      }
+
+      // Calculate total months between the dates
+      const totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 
+                        + (endDate.getMonth() - startDate.getMonth());
+
+      // Interest = (Principal * Rate Per Month * Total Months)
+      const interest = (principal * rate * totalMonths) / 100;
+
+      // Total Amount = Principal + Interest
+      const totalAmount = principal + interest;
+
+      document.getElementById('result').innerHTML = `
+        <p><strong>మొత్తం నెలలు:</strong> ${totalMonths}</p>
+        <p><strong>వడ్డీ:</strong> ₹${interest.toFixed(2)}</p>
+        <p><strong>మొత్తం మొత్తం (మూలధనం + వడ్డీ):</strong> ₹${totalAmount.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
